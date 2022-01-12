@@ -2,9 +2,10 @@
 layout: post
 title:  "HackTheBox: Timing"
 date:   2022-01-06 10:25:15 +0530
-category: writeups
+category: Hackthebox Writeups
 logo: writeups/assets/images/hackthebox_timing/logo.png
 feature_image: ../../../assets/images/hackthebox_timing/HTB_feature_image.png
+tags: hackthebox uniqid netutils
 ---
 Timing is a medium box from hackthebox which starts with finding a lfi vulnerability. The lfi vulnerability helps to get the code of `upload.php` page which has a filter to restrict malicious file upload. I bypassed the filter to achieve a remote code execution. With the help of rce I was able to download a zip file from opt directory which contained website source code. The folder was github repository so analyzing previous commits was a success. I found a valid password for user. Privesc was about exploiting sudo permission to put authorize keys in root folder. Once the new authorized key is there gaining root shell was easy.
 
@@ -62,7 +63,8 @@ Port 80 has Apache httpd running. Based on OpenSSH and Apache versions the host 
 ## Website (Port 80)
 
 Before accessing the page let's add `timing.htb` in the host file. It will be useful later.
-![web_page_login](assets/images/hackthebox_timing/webpage_initial.png)
+
+![web_page_login](../../images/hackthebox_timing/webpage_initial.png)
 
 When I tried to open the webpage it redirected to `/login.php` so looked at site headers.
 
@@ -160,7 +162,7 @@ img                     [Status: 200, Size: 25, Words: 3, Lines: 1]
 
 As seen above the `img` parameter is vulnerable to lfi. But there is some filter which is blocking to read files.
 
-![lfi](../../../assets/images/hackthebox_timing/lfi.png)
+![lfi](../../images/hackthebox_timing/lfi.png)
 
 So I used `php://filter` wrapper to bypass the filter and it worked.
 
@@ -250,15 +252,15 @@ This file has a password for sql database but the password was a dead end.
 
 With a username in hand I tried to login with various common passwords and the username:username combination worked and logged in with password aaron.
 
-![logged_in](../../../assets/images/hackthebox_timing/logged_in.png)
+![logged_in](../../images/hackthebox_timing/logged_in.png)
 
 The interesting thing to look here that it says `You are logged in as user 2!` which means there exists a `user 1` who is maybe admin. Also there is another page to update profile. Looking at the source code of page I found it is using a javascript `profile.js`.
 
-![edit_profile_php](../../../assets/images/hackthebox_timing/edit_profile_php.png)
+![edit_profile_php](../../images/hackthebox_timing/edit_profile_php.png)
 
 So I sent the update request to burp to examine and it returned with handful of information.
 
-![profile_update_burp](../../../assets/images/hackthebox_timing/profile_update_burp.png)
+![profile_update_burp](../../images/hackthebox_timing/profile_update_burp.png)
 
 The post request goes to `/profile_update.php` which is worth looking because gobuster did not find it. Also the `role` parameter is assigned with a value `0` that means if admin exists then admin's role may be `1`.
 
@@ -288,13 +290,13 @@ if ($user !== false) {
 
 The last three line of this chunk of code is most important because it says that if `role` is specified in the post parameter during updating profile it will set that role for that particular user. So I added a role parameter with value `1` and changed all other to `admin` just to be safe in profile update request in burp and successfully logged in with admin.
 
-![access_admin](../../../assets/images/hackthebox_timing/access_admin.png)
+![access_admin](../../images/hackthebox_timing/access_admin.png)
 
 ### Admin panel
 
 The admin panel has provisions to upload files but with a little playing around with different files I found that it only supports `jpg`. The post request is sent to `upload.php`.
 
-![upload_page](../../../assets/images/hackthebox_timing/upload_page.png)
+![upload_page](../../images/hackthebox_timing/upload_page.png)
 
 #### upload.php
 
@@ -377,7 +379,7 @@ if __name__=='__main__':
         pass
 ```
 
-![file name bruteforce](../../../assets/images/hackthebox_timing/file_brute.png)
+![file name bruteforce](../../images/hackthebox_timing/file_brute.png)
 
 I left the script running and uploaded the file and this code successfully found the file uploaded in seconds. Next is to get a rce. I couldn't able to get reverse shell nevertheless a rce was sufficient to get user. To get the rce i added a php one line code during uploading the file and accessed it through the lfi.
 
@@ -385,13 +387,13 @@ I left the script running and uploaded the file and this code successfully found
 <?php system($_GET['c']); ?>
 ```
 
-![shell_upload](../../../assets/images/hackthebox_timing/upload_command.png)
+![shell_upload](../../images/hackthebox_timing/upload_command.png)
 
 ### Getting the rce
 
 To automate the rce I edited the python code to perform command execution. But first let's test it in burp.
 
-![rce_burp](../../../assets/images/hackthebox_timing/rce_burp.png)
+![rce_burp](../../images/hackthebox_timing/rce_burp.png)
 
 #### rce using python
 
@@ -432,7 +434,7 @@ if __name__=='__main__':
         pass
 ```
 
-![rce_python](../../../assets/images/hackthebox_timing/rce_python.png)
+![rce_python](../../images/hackthebox_timing/rce_python.png)
 
 ## User shell as aaron
 
@@ -519,7 +521,7 @@ Starting download
 Downloaded 6 byte in 0 seconds. (0.03 KB/s)
 ```
 
-![netutils_file](../../../assets/images/hackthebox_timing/netuits_file.png)
+![netutils_file](../../images/hackthebox_timing/netuits_file.png)
 
 As the file is saved with root permission, if any file in user directory with a symlink to a file in root exists, netutils will override file with same name after downloading it but will keep the symlink. So I created a file called `authorized keys` in aaron's home directory. Then created a symlink to `/root/.ssh/authorized_keys`. Then I generated a ssh private key in my machine and supplied the public key as authorized key.
 
@@ -538,4 +540,4 @@ lrwxrwxrwx 1 root  root     9 Oct  5 15:33 .bash_history -> /dev/null
 
 Next I started a python server and let netutils to download the public key. It replaced the `authorized_keys` is `/root/.ssh` with supplied key and I logged in as root with private key.
 
-![root](../../../assets/images/hackthebox_timing/root.png)
+![root](../../images/hackthebox_timing/root.png)
