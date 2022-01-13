@@ -13,7 +13,7 @@ Timing is a medium box from hackthebox which starts with finding a lfi vulnerabi
 
 | machine name 	| Machine Creator 	| Points 	|  IP address  	|               Hackthebox link              	|
 |:------------:	|:---------------:	|:------:	|:------------:	|:------------------------------------------:	|
-|    Timing    	|      irogir     	|   30   	| 10.10.11.135 	| [Timing](https://app.hackthebox.com/machines/Timing) 	|
+|    Timing    	|      [Irogir](https://app.hackthebox.com/users/476556)     	|   30   	| 10.10.11.135 	| [Timing](https://app.hackthebox.com/machines/Timing) 	|
 
 ## Nmap
 
