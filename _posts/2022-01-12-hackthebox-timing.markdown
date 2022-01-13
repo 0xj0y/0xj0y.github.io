@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "HackTheBox: Timing"
-date:   2022-01-06 10:25:15 +0530
+date:   2022-01-12 10:25:15 +0530
 category: Hackthebox Writeups
 logo: writeups/assets/images/hackthebox_timing/logo.png
 feature_image: ../../../assets/images/hackthebox_timing/HTB_feature_image.png
