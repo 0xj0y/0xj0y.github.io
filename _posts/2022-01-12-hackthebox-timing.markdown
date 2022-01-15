@@ -1,15 +1,15 @@
 ---
 layout: post
-title:  "HackTheBox: Timing"
+title:  "Hackthebox: Timing"
 date:   2022-01-12 10:25:15 +0530
 category: Hackthebox Writeups
 logo: writeups/assets/images/hackthebox_timing/logo.png
 image:
     src: ../../images/hackthebox_timing/HTB_feature_image.png
     alt: featured image
-tags: hackthebox uniqid netutils
+tags: hackthebox uniqid netutils lfi
 ---
-Timing is a medium box from hackthebox which starts with finding a lfi vulnerability. The lfi vulnerability helps to get the code of `upload.php` page which has a filter to restrict malicious file upload. I bypassed the filter to achieve a remote code execution. With the help of rce I was able to download a zip file from opt directory which contained website source code. The folder was github repository so analyzing previous commits was a success. I found a valid password for user. Privesc was about exploiting sudo permission to put authorize keys in root folder. Once the new authorized key is there gaining root shell was easy.
+Timing is a medium box from hackthebox which starts with finding a lfi vulnerability. The lfi vulnerability helps to get the code of `upload.php` page which has a filter to restrict malicious file upload. I bypassed the filter to achieve a remote code execution. With the help of rce I was able to download a zip file from opt directory which contained website source code. The folder was github repository so analyzing previous commits was a success. I found a valid password for user. Privesc was about exploiting sudo permission to put authorize keys in root folder and logging through ssh as root.
 
 | machine name 	| Machine Creator 	| Points 	|  IP address  	|               Hackthebox link              	|
 |:------------:	|:---------------:	|:------:	|:------------:	|:------------------------------------------:	|
