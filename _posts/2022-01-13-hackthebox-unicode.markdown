@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Hackthebox: Unicode"
-date:   2022-01-12 10:25:15 +0530
+date:   2022-01-15 10:25:15 +0530
 category: Hackthebox Writeups
 logo: writeups/assets/images/htb_unicode/machine_banner.png
 image:
@@ -16,7 +16,7 @@ Unicode is a medium box from hackthebox which starts with exploiting jwt in orde
 |:------------:	|:-----------------------------------------------------:	|:------:	|:------------:	|:--------------------------------------------------:	|
 |    Unicode   	| [wh0am1root](https://app.hackthebox.com/users/137089) 	|   30   	| 10.10.11.126 	| [Unicode](https://app.hackthebox.com/machines/415) 	|
 
-### nmap
+### Nmap
 
 I started with initial scan to find all the open ports.
 
@@ -55,13 +55,13 @@ Service detection performed. Please report any incorrect results at https://nmap
 # Nmap done at Sun Jan  9 21:34:20 2022 -- 1 IP address (1 host up) scanned in 10.75 seconds
 ```
 
-According to the detailed nmap scan report the host has only 2 ports open which are 22 and 80. The box has ubuntu running in it. The port 80 has a webserver running which is `nginx`. 
+According to the detailed nmap scan report the host has only 2 ports open which are 22 and 80. The box has ubuntu running in it. The port 80 has a webserver running which is `nginx`.
 
 ### Website (Port 80)
 
 ![webpage_initial](webpage_initial.png)
 
-The website has some interesting features which needs to examine closely. Website has login and register feature. Surprisingly they are not any php or html page, they are directories. Also the home page has a button to google about the company. Clicking on the button redirects to `google.com`.   
+The website has some interesting features which needs to examine closely. Website has login and register feature. Surprisingly they are not any php or html page, they are directories. Also the home page has a button to google about the company. Clicking on the button redirects to `google.com`.
 
 ![open-redirect](open-redirect.png)
 
@@ -112,7 +112,7 @@ This site created a public-private key pair and corresponding n and e. So I repl
 
 ![forged_token](forged_token.png)
 
-But newly forged token wasn't successful. Because the server maybe looks for `hackmedia.htb` at the starting of the address. TO bypass this I took advantage of the open redirect vulnerability which I discovered initially. I backtracked one directory to get into `/redirect` and redirect the request to my ip address where I hosted forged jwks. 
+But newly forged token wasn't successful. Because the server maybe looks for `hackmedia.htb` at the starting of the address. TO bypass this I took advantage of the open redirect vulnerability which I discovered initially. I backtracked one directory to get into `/redirect` and redirect the request to my ip address where I hosted forged jwks.
 
 ![forged_token_stage2](forged_token_stage2.png)
 
@@ -120,7 +120,7 @@ This time the token worked and I got admin access.
 
 #### Admin panel
 
-The admin panel has a lfi vulnerability. The endpoint `/display/?page=quarterly.pdf` takes a argument for `page` parameter sends a get request. This lead to lfi. 
+The admin panel has a lfi vulnerability. The endpoint `/display/?page=quarterly.pdf` takes a argument for `page` parameter sends a get request. This lead to lfi.
 
 ![lfi_maybe](lfi_maybe.png)
 
@@ -173,15 +173,17 @@ server{
   }
 }
 ```
+
 It says that the source code is stored in `/home/code/coder`. It is also possible that the folder contains any database config file. So I searched for `db.php` and didn't find anything. So I searched popular configuration file extensions and tried appending them with `db`. After little exploring I found `db.yaml` in the source folder.
- 
+
 ```yaml
 mysql_host: "localhost"
 mysql_user: "code"
 mysql_password: REDACTED
 mysql_db: "user"
 ```
-The yaml file has credentials for `code`. I tried to login with ssh and successfully logged in. 
+
+The yaml file has credentials for `code`. I tried to login with ssh and successfully logged in.
 
 ### Privesc
 
