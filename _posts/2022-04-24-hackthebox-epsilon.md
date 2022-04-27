@@ -510,7 +510,6 @@ rm -rf /dev/shm/tars/*
 if [[ -f /opt/backups/checksum ]] #checks if checksum exists. Important because the directory is emptied every time the backup.sh executes
 then
 	echo "Checksum Exists"
-	rm -f /opt/backups/checksum #removes the checksum file
 	ln -sf /root/root.txt /opt/backups/checksum # creates symlink to root.txt
 	echo "Symlink created"
 	sleep 0.5
