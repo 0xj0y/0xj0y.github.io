@@ -6,7 +6,7 @@ category: Notes
 tags: Notes
 ---
 
-1. Print all ports comma separated in one line
+#### Print all ports comma separated in one line
 
 ```bash
 cat ports.nmap | grep -i open  | awk -F\/ '{print $1}' | tr '\n' ',' | sed 's/,$//g'
