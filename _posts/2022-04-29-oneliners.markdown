@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Important One liners"
+title:  "Important One Liners"
 date:   2022-04-29 15:30:00 +0530
 category: Notes
 tags: Notes
