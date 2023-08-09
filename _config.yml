@@ -20,10 +20,10 @@ timezone: Asia/Kolkata
 
 title: Trade Journal # the main title
 
-tagline: A text-focused Jekyll theme # it will display as the sub-title
+tagline: Daily market summery and trade records # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
-  A minimal, responsive and feature-rich Jekyll theme for technical writing.
+  A minimal webiste where i will record my trades and will try to write a market summery end of the day for my learning.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: "https://0xj0y.github.io"
@@ -32,7 +32,7 @@ github:
   username: 0xj0y # change to your github username
 
 twitter:
-  username: twitter_username # change to your twitter username
+  username: JMukhopdhyay # change to your twitter username
 
 social:
   # Change to your full name.
@@ -41,8 +41,8 @@ social:
   email: joymkh21@@gmail.com # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username # change to your twitter homepage
-    - https://github.com/username # change to your github homepage
+    - https://twitter.com/JMukhopdhyay # change to your twitter homepage
+    - https://github.com/0xj0y # change to your github homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
@@ -76,7 +76,7 @@ theme_mode: # [light|dark]
 img_cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:
+avatar: assets\img\logo.jpeg
 
 # boolean type, the global switch for TOC in posts.
 toc: true
